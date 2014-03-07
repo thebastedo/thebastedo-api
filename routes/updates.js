@@ -1,4 +1,5 @@
 var mongo = require('mongodb');
+		sec = require('../lib/apisec');
 
 var Server = mongo.Server,
 		Db = mongo.Db,
@@ -20,6 +21,7 @@ db.open(function(err,db){
 });
 
 exports.getAll = function(req,res) {
+	console.log("Get All req.ip = " + req.ip);
 	db.collection('thebastedo', function(err,collection){
 		collection.find().toArray(function(err,items){
 			res.send(items);
@@ -38,51 +40,72 @@ exports.findById = function(req,res) {
 };
 
 exports.addUpdate = function(req,res) {
-	var update = req.body;
-	console.log('Adding Update: ' + JSON.stringify(update));
-	db.collection('thebastedo', function(err,collection) {
-		collection.insert(update, {safe:true}, function(err,result) {
-			if (err) {
-				res.send({'error':'insert failed'});
-			} else {
-				console.log('Success: ' + JSON.stringify(result[0]));
-				res.send(result[0]);
-			}
-		});
+	sec.hasAccess(req.ip, function(response){
+		if (!response) {
+			console.log("Add Failed...IP " + req.ip + " does not have access.");
+			res.send({'error':'what was that'});
+		} else {
+			var update = req.body;
+			console.log('Adding Update: ' + JSON.stringify(update));
+			db.collection('thebastedo', function(err,collection) {
+				collection.insert(update, {safe:true}, function(err,result) {
+					if (err) {
+						res.send({'error':'insert failed'});
+					} else {
+						console.log('Success: ' + JSON.stringify(result[0]));
+						res.send(result[0]);
+					}
+				});
+			});
+		}
 	});
 };
 
 exports.updateUpdate = function(req,res) {
-	var id = req.params.id;
-	var update = req.body;
-	console.log('updating update: ' + id);
-	console.log(JSON.stringify(update));
-	db.collection('thebastedo', function(err,collection) {
-		collection.update({'_id': new BSON.ObjectID(id)}, update, {safe:true}, function(err,result) {
-			if (err) {
-				console.log('Error updating update: ' + err);
-				res.send({'error': 'update failed'});
-			} else {
-				console.log('' + result + ' update saved');
-				res.send(update);
-			}
-		});
+	sec.hasAccess(req.ip,function(response) {
+		if (!response) {
+			console.log("Update Failed...IP " + req.ip + " does not have access.");
+			res.send({'error':'what was that'});
+		} else {
+			var id = req.params.id;
+			var update = req.body;
+			console.log('updating update: ' + id);
+			console.log(JSON.stringify(update));
+			db.collection('thebastedo', function(err,collection) {
+				collection.update({'_id': new BSON.ObjectID(id)}, update, {safe:true}, function(err,result) {
+					if (err) {
+						console.log('Error updating update: ' + err);
+						res.send({'error': 'update failed'});
+					} else {
+						console.log('' + result + ' update saved');
+						res.send(update);
+					}
+				});
+			});
+		}
 	});
 };
 
 exports.deleteUpdate = function(req,res) {
-	var id = req.params.id;
-	console.log('Deleting update: ' + id);
-	db.collection('thebastedo', function(err,collection) {
-		collection.remove({'_id': new BSON.ObjectID(id)}, {safe:true}, function(err,result) {
-			if (err) {
-				console.log('Error deleting update: ' + err);
-				res.send({'error':'delete failed'});
-			} else {
-				console.log('' + result + ' document deleted');
-				res.send(req.body);
-			}
-		});
+	sec.hasAccess(req.ip,function(response) {
+		if (!response) {
+			console.log("Delete Failed...IP " + req.ip + " does not have access.");
+			res.send({'error':'what was that'});
+		} else {
+			var id = req.params.id;
+			console.log('Deleting update: ' + id);
+			db.collection('thebastedo', function(err,collection) {
+				collection.remove({'_id': new BSON.ObjectID(id)}, {safe:true}, function(err,result) {
+					if (err) {
+						console.log('Error deleting update: ' + err);
+						res.send({'error':'delete failed'});
+					} else {
+						console.log('' + result + ' document deleted');
+						res.send(req.body);
+					}
+				});
+			});
+		}
 	});
 };
 
