@@ -25,5 +25,7 @@ app.post('/updates', updates.addUpdate);
 app.put('/updates/:id', updates.updateUpdate);
 app.delete('/updates/:id', updates.deleteUpdate);
 
-app.listen('nodejs-thebastedo.rhcloud.com',80);
-console.log('listening on port 15080...');
+//app.listen('nodejs-thebastedo.rhcloud.com',80);
+//console.log('listening on port 15080...');
+app.listen();
+console.log('listening...');
