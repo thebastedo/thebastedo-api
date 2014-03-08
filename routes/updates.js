@@ -1,15 +1,19 @@
 var mongo = require('mongodb');
 		sec = require('../lib/apisec');
+		settings = require('../settings');
 
 var Server = mongo.Server,
 		Db = mongo.Db,
 		BSON = mongo.BSONPure;
 
-var server = new Server('localhost', 27017, {auto_reconnect: true});
-db = new Db('thebastedo', server);
+var server = new Server(settings.mongoHost, settings.mongoPort, {auto_reconnect: true});
+db = new Db(settings.mongoDb, server);
 
 db.open(function(err,db){
 	if (!err) {
+		db.authenticate(settings.dbUser, settings.dbPass, {authdb: "admin"}, function(err,res){
+			if (err) { throw err };
+		}
 		console.log("Connected to 'thebastedo' db");
 		db.collection('thebastedo', {strict:true}, function(err,collection){
 			if (err){
@@ -17,6 +21,8 @@ db.open(function(err,db){
 				populateDB();
 			}
 		});
+	} else {
+		console.log('Db connect failed...');
 	}
 });
 

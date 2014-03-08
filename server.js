@@ -29,4 +29,4 @@ app.delete('/updates/:id', updates.deleteUpdate);
 //app.listen('nodejs-thebastedo.rhcloud.com',80);
 //console.log('listening on port 15080...');
 console.log('listening on ' + settings.listenHost + ':' + settings.listenPort);
-app.listen(settings.listenHost, settings.listenPort);
+app.listen(settings.listenPort, settings.listenHost);
