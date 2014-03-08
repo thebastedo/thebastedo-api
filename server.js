@@ -3,6 +3,7 @@
  */
 var express = require('express');
 		updates = require('./routes/updates');
+		settings = require('./settings');
 
 /*
  * Creating our main app
@@ -27,5 +28,5 @@ app.delete('/updates/:id', updates.deleteUpdate);
 
 //app.listen('nodejs-thebastedo.rhcloud.com',80);
 //console.log('listening on port 15080...');
-app.listen();
-console.log('listening...');
+console.log('listening on ' + settings.listenHost + ':' + settings.listenPort);
+app.listen(settings.listenHost, settings.listenPort);
