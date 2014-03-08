@@ -13,7 +13,7 @@ db.open(function(err,db){
 	if (!err) {
 		db.authenticate(settings.dbUser, settings.dbPass, {authdb: "admin"}, function(err,res){
 			if (err) { throw err };
-		}
+		});
 		console.log("Connected to 'thebastedo' db");
 		db.collection('thebastedo', {strict:true}, function(err,collection){
 			if (err){
