@@ -15,6 +15,7 @@ app.configure(function() {
 	app.use(express.logger('dev'));
 	//app.use(express.logger('tiny'));
 	app.use(express.bodyParser());
+	app.use(allowCrossDomain);
 });
 
 /*
@@ -30,3 +31,12 @@ app.delete('/updates/:id', updates.deleteUpdate);
 //console.log('listening on port 15080...');
 console.log('listening on ' + settings.listenHost + ':' + settings.listenPort);
 app.listen(settings.listenPort, settings.listenHost);
+
+//CORS middleware
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+}
