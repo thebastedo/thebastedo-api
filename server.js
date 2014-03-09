@@ -1,3 +1,12 @@
+//CORS middleware
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+}
+
 /*
  * Handle our requires
  */
@@ -31,12 +40,3 @@ app.delete('/updates/:id', updates.deleteUpdate);
 //console.log('listening on port 15080...');
 console.log('listening on ' + settings.listenHost + ':' + settings.listenPort);
 app.listen(settings.listenPort, settings.listenHost);
-
-//CORS middleware
-var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-
-    next();
-}
