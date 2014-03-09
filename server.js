@@ -26,6 +26,7 @@ app.configure(function() {
 	app.use(express.bodyParser());
 	//app.use(allowCrossDomain);
 	app.use(function(req, res, next) {
+		console.log('adding request headers...');
     var oneof = false;
     if(req.headers.origin) {
         res.header('Access-Control-Allow-Origin', req.headers.origin);
